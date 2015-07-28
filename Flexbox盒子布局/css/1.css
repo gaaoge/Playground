@@ -1,0 +1,69 @@
+/**
+ * Created by GG on 15/7/27.
+ */
+
+.item-container {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    background-color: hsl(34, 88%, 90%);
+    margin: 10px auto;
+}
+
+.square {
+    height: 200px;
+    width: 200px;
+    background-color: hsl(50, 88%, 50%);
+}
+
+.circle {
+    border-radius: 50%;
+    width: 150px;
+    height: 150px;
+    background-color: hsl(22, 88%, 50%);
+}
+
+.container-1 {
+    -webkit-box-pack: end;
+    -webkit-justify-content: flex-end;
+        -ms-flex-pack: end;
+            justify-content: flex-end;
+}
+
+.container-2 {
+    -webkit-box-pack: justify;
+    -webkit-justify-content: space-between;
+        -ms-flex-pack: justify;
+            justify-content: space-between;
+}
+
+.container-3 {
+    -webkit-justify-content: space-around;
+        -ms-flex-pack: distribute;
+            justify-content: space-around;
+}
+
+.container-4 {
+    -webkit-justify-content: space-around;
+        -ms-flex-pack: distribute;
+            justify-content: space-around;
+    -webkit-box-align: center;
+    -webkit-align-items: center;
+        -ms-flex-align: center;
+            align-items: center;
+}
+
+.container-5 {
+    -webkit-box-pack: stretch;
+    -webkit-justify-content: stretch;
+        -ms-flex-pack: stretch;
+            justify-content: stretch;
+}
+
+.container-5 .square {
+    -webkit-box-ordinal-group: 0;
+    -webkit-order: -1;
+        -ms-flex-order: -1;
+            order: -1;
+}

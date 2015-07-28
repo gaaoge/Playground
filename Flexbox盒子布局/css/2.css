@@ -1,0 +1,48 @@
+/**
+ * Created by GG on 15/7/27.
+ */
+
+.container {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    padding: 10px;
+}
+
+.triangle {
+    width: 0;
+    height: 0;
+    border-bottom: 114px solid hsl(240, 30%, 50%);
+    border-left: 63px solid transparent;
+    border-right: 63px solid transparent;
+}
+
+.square{
+    width: 126px;
+    height: 126px;
+    background: hsl(300, 30%, 50%);
+}
+
+.circle {
+    width: 126px;
+    height: 126px;
+    border-radius: 50%;
+    background: hsl(340, 30%, 50%);
+}
+
+.container-1 {
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: reverse;
+    -webkit-flex-direction: column-reverse;
+        -ms-flex-direction: column-reverse;
+            flex-direction: column-reverse;
+    -webkit-box-pack: end;
+    -webkit-justify-content: flex-end;
+        -ms-flex-pack: end;
+            justify-content: flex-end;
+    -webkit-box-align: center;
+    -webkit-align-items: center;
+        -ms-flex-align: center;
+            align-items: center;
+}
