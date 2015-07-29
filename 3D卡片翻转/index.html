@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <style>
+        .container {
+            width: 200px;
+            height: 260px;
+            position: relative;
+            perspective: 800px;
+        }
+
+        .card {
+            width: 100%;
+            height: 100%;
+            transform-style: preserve-3d;
+            transition: transform 1s;
+            /*transform-origin: right center;*/
+        }
+
+        .card:hover {
+            transform: rotateY(.5turn);
+        }
+
+        .card figure {
+            position: absolute;
+            left: 0;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            margin: 0;
+            color: white;
+            font-size: 48px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            backface-visibility: hidden;
+        }
+
+        .front {
+            background: red;
+        }
+
+        .back {
+            background: blue;
+            transform: translateZ(1px) rotateY(.5turn);
+        }
+    </style>
+</head>
+<body>
+
+<section class="container">
+    <div class="card">
+        <figure class="front"><span>1</span></figure>
+        <figure class="back"><span>2</span></figure>
+    </div>
+</section>
+
+</body>
+</html>
