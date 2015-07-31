@@ -22,6 +22,9 @@
     width: 126px;
     height: 126px;
     background: hsl(300, 30%, 50%);
+    -webkit-align-self: flex-start;
+        -ms-flex-item-align: start;
+            align-self: flex-start;
 }
 
 .circle {

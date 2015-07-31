@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>全屏模式</title>
+    <link rel="stylesheet" href="css/index.css"/>
+</head>
+<body>
+<div class="main">
+    全屏模式
+</div>
+
+<script>
+    window.onload = function () {
+        var main = document.querySelector('.main');
+        main.addEventListener('click', function () {
+            if (main.requestFullscreen) {
+                main.requestFullscreen();
+            } else if (main.webkitRequestFullscreen) {
+                main.webkitRequestFullscreen();
+            } else if (main.mozRequestFullScreen) {
+                main.mozRequestFullScreen();
+            } else if (main.msRequestFullscreen) {
+                main.msRequestFullscreen();
+            }
+        }, false);
+    }
+</script>
+</body>
+</html>
