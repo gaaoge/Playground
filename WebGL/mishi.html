@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Hello WebGL</title>
+    <script src="js/fix-viewport.js"></script>
+    <script src="js/three.js"></script>
+    <script src="js/PointerLockControls.js"></script>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+        }
+
+        #blocker {
+            position: fixed;
+            left: 0;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, .5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #fff;
+            font-size: 40px;
+        }
+    </style>
+</head>
+<body>
+
+<div id="blocker">开始</div>
+
+<script>
+    var scene, camera, renderer, control;
+    var blocker = document.getElementById('blocker');
+
+    init();
+    render();
+    animate();
+
+    function init() {
+        scene = new THREE.Scene();
+
+        camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 10000);
+        camera.position.set(0, 0, 0);
+
+        renderer = new THREE.WebGLRenderer();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setClearColor(0x000000);
+        document.body.appendChild(renderer.domElement);
+
+        control = new THREE.PointerLockControls(camera);
+        scene.add(control.getObject());
+
+        document.addEventListener('pointerlockchange', function () {
+            if (document.pointerLockElement === document.body) {
+                control.enabled = true;
+                blocker.style.display = 'none';
+            } else {
+                control.enabled = false;
+                blocker.style.display = 'flex';
+            }
+        }, false);
+        blocker.addEventListener('click', function () {
+            blocker.style.display = 'none';
+            control.enabled = true;
+            document.body.requestPointerLock();
+            document.body.webkitRequestFullscreen();
+        });
+
+        window.addEventListener('resize', function () {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        }, false);
+
+        add();
+    }
+
+    function add() {
+        var texture7 = THREE.ImageUtils.loadTexture('img/chess.png', {}, render);
+        texture7.wrapS = texture7.wrapT = THREE.RepeatWrapping;
+        texture7.repeat.set(10, 10);
+        var geometry7 = new THREE.BoxGeometry(1000, 1000, 1000);
+        var material7 = new THREE.MeshLambertMaterial({map: texture7, side: THREE.DoubleSide});
+        var mesh7 = new THREE.Mesh(geometry7, material7);
+        mesh7.position.set(0, 0, 0);
+        scene.add(mesh7);
+
+        var light = new THREE.PointLight(0xffffff);
+        light.position.set(500, 500, 500);
+        scene.add(light);
+        scene.add(new THREE.AmbientLight(0x666666));
+    }
+
+    function render() {
+        renderer.render(scene, camera);
+    }
+
+    function animate() {
+        requestAnimationFrame(animate);
+        render();
+    }
+</script>
+
+</body>
+</html>

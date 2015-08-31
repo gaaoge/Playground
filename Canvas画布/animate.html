@@ -9,10 +9,11 @@
 <canvas id="canvas" width="600" height="600"></canvas>
 
 <script>
-    var reqAnimFrame = window.mozRequestAnimationFrame ||
+    var reqAnimFrame =window.requestAnimationFrame  ||
             window.webkitRequestAnimationFrame ||
             window.msRequestAnimationFrame ||
-            window.oRequestAnimationFrame;
+            window.oRequestAnimationFrame ||
+            window.mozRequestAnimationFrame;
     var canvas = document.getElementById("canvas");
     var context = canvas.getContext("2d");
     var x = 0, y = 15, speed = 5;

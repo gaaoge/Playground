@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Hello WebGL</title>
+    <script src="js/fix-viewport.js"></script>
+    <script src="js/three.js"></script>
+    <script src="js/OrbitControls.js"></script>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+        }
+    </style>
+</head>
+<body>
+
+<script>
+    var scene, camera, renderer, control;
+
+    init();
+    render();
+    animate();
+
+    function init() {
+        scene = new THREE.Scene();
+
+        camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 10000);
+        camera.position.set(800, 800, 800);
+        camera.lookAt(scene.position);
+
+        renderer = new THREE.WebGLRenderer();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setClearColor(0x000000);
+        document.body.appendChild(renderer.domElement);
+
+        control = new THREE.OrbitControls(camera, renderer.domElement);
+        control.addEventListener('change', render);
+
+        add();
+    }
+
+    function add() {
+        var geometry1 = new THREE.BoxGeometry(100, 100, 100);
+        var material1 = new THREE.MeshLambertMaterial({color: 0xff0000});
+        var mesh1 = new THREE.Mesh(geometry1, material1);
+        mesh1.position.set(0, 100, 0);
+        scene.add(mesh1);
+
+        var geometry2 = new THREE.SphereGeometry(100, 32, 32, 0, Math.PI * 2, Math.PI *2/ 3, Math.PI / 2);
+        var material2 = new THREE.MeshLambertMaterial({color: 0x0000ff, wireframe: true});
+        var mesh2 = new THREE.Mesh(geometry2, material2);
+        mesh2.position.set(0, 100, 0);
+        scene.add(mesh2);
+
+        var geometry3 = new THREE.SphereGeometry(100, 64, 64);
+        var material3 = new THREE.MeshLambertMaterial({color: 0xffff00, emissive: 0xff0000});
+        var mesh3 = new THREE.Mesh(geometry3, material3);
+        mesh3.position.set(-200, 300, 0);
+        scene.add(mesh3);
+
+        var geometry4 = new THREE.SphereGeometry(100, 64, 64);
+        var material4 = new THREE.MeshPhongMaterial({color: 0xff0000, specular: 0xff0000, shininess: 100});
+        var mesh4 = new THREE.Mesh(geometry4, material4);
+        mesh4.position.set(200, 300, 0);
+        scene.add(mesh4);
+
+        var geometry5 = new THREE.BoxGeometry(100, 100, 100);
+        var material5 = new THREE.MeshNormalMaterial();
+        var mesh5 = new THREE.Mesh(geometry5, material5);
+        mesh5.position.set(0, 300, 0);
+        scene.add(mesh5);
+
+        var texture6 = THREE.ImageUtils.loadTexture('img/share-icon.png', {}, render);
+        var geometry6 = new THREE.BoxGeometry(100, 100, 100);
+        var material6 = new THREE.MeshLambertMaterial({map: texture6});
+        var mesh6 = new THREE.Mesh(geometry6, material6);
+        mesh6.position.set(0, 500, 0);
+        scene.add(mesh6);
+
+        var texture7 = THREE.ImageUtils.loadTexture('img/chess.png', {}, render);
+        texture7.wrapS = texture7.wrapT = THREE.RepeatWrapping;
+        texture7.repeat.set(4, 4);
+        var geometry7 = new THREE.BoxGeometry(100, 100, 100);
+        var material7 = new THREE.MeshLambertMaterial({map: texture7});
+        var mesh7 = new THREE.Mesh(geometry7, material7);
+        mesh7.position.set(200, 500, 0);
+        scene.add(mesh7);
+
+        var materials = [];
+        for (var i = 0; i < 6; ++i) {
+            materials.push(new THREE.MeshBasicMaterial({
+                map: THREE.ImageUtils.loadTexture('img/news-bg-' + (i % 3 + 1) + '.png', {}, render),
+                overdraw: true
+            }));
+        }
+        var geometry8 = new THREE.BoxGeometry(100, 100, 100);
+        var material8 = new THREE.MeshFaceMaterial(materials);
+        var mesh8 = new THREE.Mesh(geometry8, material8);
+        mesh8.position.set(-200, 500, 0);
+        scene.add(mesh8);
+
+        var light = new THREE.PointLight(0xffffff);
+        light.position.set(1000, 1000, 1000);
+        scene.add(light);
+        scene.add(new THREE.AmbientLight(0x666666));
+    }
+
+    function render() {
+        renderer.render(scene, camera);
+    }
+
+    function animate() {
+        requestAnimationFrame(animate);
+        control.update();
+    }
+</script>
+
+</body>
+</html>
