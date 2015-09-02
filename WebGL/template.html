@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Hello WebGL</title>
+    <script src="js/fix-viewport.js"></script>
+    <script src="js/three.js"></script>
+    <script src="js/OrbitControls.js"></script>
+    <script src="js/stats.min.js"></script>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+        }
+    </style>
+</head>
+<body>
+
+<script>
+    var scene, camera, renderer, control, stat;
+
+    init();
+    animate();
+
+    function init() {
+        scene = new THREE.Scene();
+
+        camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 10000);
+        camera.position.set(500, 500, 500);
+        camera.lookAt(scene.position);
+
+        renderer = new THREE.WebGLRenderer();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setClearColor(0x000000);
+        document.body.appendChild(renderer.domElement);
+
+        control = new THREE.OrbitControls(camera, renderer.domElement);
+        control.addEventListener('change', function () {
+            renderer.render(scene, camera);
+        });
+
+        stat = new Stats();
+        stat.domElement.style.position = 'absolute';
+        stat.domElement.style.right = '0px';
+        stat.domElement.style.top = '0px';
+        document.body.appendChild(stat.domElement);
+
+        add();
+    }
+
+    function animate() {
+        requestAnimationFrame(animate);
+        render();
+        control.update();
+        stat.update();
+    }
+
+    //添加场景内容
+    function add() {
+        var geometry1 = new THREE.SphereGeometry(10, 64, 64);
+        var material1 = new THREE.MeshLambertMaterial({color: 0xffff00, emissive: 0xff0000});
+        var ball = new THREE.Mesh(geometry1, material1);
+        ball.position.set(0, 100, 0);
+        scene.add(ball);
+
+        var texture = THREE.ImageUtils.loadTexture('img/chess.png', {}, render);
+        texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
+        texture.repeat.set(4, 4);
+        var geometry2 = new THREE.PlaneGeometry(200, 200);
+        var material2 = new THREE.MeshLambertMaterial({map: texture, side: THREE.DoubleSide});
+        var plane = new THREE.Mesh(geometry2, material2);
+        plane.rotation.set(-Math.PI / 2, 0, 0);
+        scene.add(plane);
+
+        var light = new THREE.PointLight(0xffffff);
+        light.position.set(1000, 1000, 1000);
+        scene.add(light);
+        scene.add(new THREE.AmbientLight(0x666666));
+    }
+
+    //渲染场景
+    function render() {
+        renderer.render(scene, camera);
+    }
+</script>
+
+</body>
+</html>

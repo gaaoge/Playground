@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Hello WebGL</title>
+    <script src="js/fix-viewport.js"></script>
+    <script src="js/three.js"></script>
+    <script src="js/OrbitControls.js"></script>
+    <script src="js/stats.min.js"></script>
+    <script src="js/OBJLoader.js"></script>
+    <script src="js/MTLLoader.js"></script>
+    <script src="js/OBJMTLLoader.js"></script>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+        }
+    </style>
+</head>
+<body>
+
+<script>
+    var scene, camera, renderer, control, stat;
+
+    var model;
+
+    init();
+    animate();
+
+    function init() {
+        scene = new THREE.Scene();
+
+        camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 100000);
+        camera.position.set(1000, 1000, 1000);
+        camera.lookAt(scene.position);
+
+        renderer = new THREE.WebGLRenderer();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setClearColor(0x000000);
+        renderer.shadowMapEnabled = true;
+        renderer.shadowMapSoft = true;
+        document.body.appendChild(renderer.domElement);
+
+        control = new THREE.OrbitControls(camera, renderer.domElement);
+        control.addEventListener('change', function () {
+            renderer.render(scene, camera);
+        });
+
+        stat = new Stats();
+        stat.domElement.style.position = 'absolute';
+        stat.domElement.style.right = '0px';
+        stat.domElement.style.top = '0px';
+        document.body.appendChild(stat.domElement);
+
+        add();
+    }
+
+    function animate() {
+        requestAnimationFrame(animate);
+        render();
+        control.update();
+        stat.update();
+    }
+
+    //添加场景内容
+    function add() {
+        var loader1 = new THREE.OBJLoader();
+        loader1.load('obj/car/file.obj', function (obj) {
+            model = obj;
+            model.castShadow = true;
+            model.position.y = 200;
+            scene.add(model);
+
+            new TWEEN.Tween(model.position).to({x: 200}, 2000).repeat(Infinity).start();
+        });
+
+        var cube = new THREE.Mesh(new THREE.BoxGeometry(100, 100, 100),
+                new THREE.MeshLambertMaterial({color: 0x00ff00}));
+        cube.castShadow = true;
+        cube.position.y = 50;
+        scene.add(cube);
+
+//        var loader2 = new THREE.OBJMTLLoader();
+//        loader2.load('obj/car/file.obj', 'obj/car/file.mtl', function (obj) {
+//            scene.add(obj);
+//        });
+
+        var geometry2 = new THREE.PlaneGeometry(10000, 10000);
+        var material2 = new THREE.MeshPhongMaterial({color: 0xcccccc, side: THREE.DoubleSide});
+        var plane = new THREE.Mesh(geometry2, material2);
+        plane.rotation.set(-Math.PI / 2, 0, 0);
+        plane.receiveShadow = true;
+        scene.add(plane);
+
+        var light = new THREE.SpotLight(0xffffff, 1, 10000, Math.PI / 6, 25);
+        light.position.set(400, 1000, 600);
+        light.castShadow = true;
+        light.shadowCameraVisible = true;
+        scene.add(light);
+        scene.add(new THREE.AmbientLight(0x666666));
+        scene.add(light);
+    }
+
+    //渲染场景
+    function render() {
+        model && TWEEN.update();
+        renderer.render(scene, camera);
+    }
+</script>
+
+</body>
+</html>

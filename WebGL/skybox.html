@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Hello WebGL</title>
+    <script src="js/fix-viewport.js"></script>
+    <script src="js/three.js"></script>
+    <script src="js/OrbitControls.js"></script>
+    <script src="js/stats.min.js"></script>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+        }
+    </style>
+</head>
+<body>
+
+<script>
+    var scene, camera, renderer, control, stat;
+
+    init();
+    render();
+    animate();
+
+    function init() {
+        scene = new THREE.Scene();
+
+        camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 10000);
+        camera.position.set(500, 100, 500);
+
+        renderer = new THREE.WebGLRenderer();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setClearColor(0x000000);
+        document.body.appendChild(renderer.domElement);
+
+        control = new THREE.OrbitControls(camera, renderer.domElement);
+        control.addEventListener('change', render);
+        control.maxDistance = 2000;
+
+        stat = new Stats();
+        stat.domElement.style.position = 'absolute';
+        stat.domElement.style.right = '0px';
+        stat.domElement.style.top = '0px';
+        document.body.appendChild(stat.domElement);
+
+        add();
+    }
+
+    function add() {
+        var texture6 = THREE.ImageUtils.loadTexture('img/share-icon.png', {}, render);
+        var geometry6 = new THREE.BoxGeometry(100, 100, 100);
+        var material6 = new THREE.MeshLambertMaterial({map: texture6});
+        var mesh6 = new THREE.Mesh(geometry6, material6);
+        scene.add(mesh6);
+
+        scene.add(new THREE.AmbientLight(0xffffff));
+
+//        天空盒
+        var path = "img/pisa/";
+        var format = '.png';
+        var urls = [
+            path + 'px' + format, path + 'nx' + format,
+            path + 'py' + format, path + 'ny' + format,
+            path + 'pz' + format, path + 'nz' + format
+        ];
+
+        var textureCube = THREE.ImageUtils.loadTextureCube(urls, {}, render);
+        var shader = THREE.ShaderLib["cube"];
+        shader.uniforms["tCube"].value = textureCube;
+
+        var material = new THREE.ShaderMaterial({
+            fragmentShader: shader.fragmentShader,
+            vertexShader: shader.vertexShader,
+            uniforms: shader.uniforms,
+            depthWrite: false,
+            side: THREE.BackSide
+        });
+
+        var mesh = new THREE.Mesh(new THREE.BoxGeometry(2000, 2000, 2000), material);
+        scene.add(mesh);
+    }
+
+    function render() {
+        renderer.render(scene, camera);
+    }
+
+    function animate() {
+        stat.begin();
+        requestAnimationFrame(animate);
+        control.update();
+        stat.end();
+    }
+</script>
+
+</body>
+</html>

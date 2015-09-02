@@ -27,7 +27,7 @@
         scene = new THREE.Scene();
 
         camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 10000);
-        camera.position.set(800, 800, 800);
+        camera.position.set(800, 1200, 800);
         camera.lookAt(scene.position);
 
         renderer = new THREE.WebGLRenderer();
@@ -48,7 +48,7 @@
         mesh1.position.set(0, 100, 0);
         scene.add(mesh1);
 
-        var geometry2 = new THREE.SphereGeometry(100, 32, 32, 0, Math.PI * 2, Math.PI *2/ 3, Math.PI / 2);
+        var geometry2 = new THREE.SphereGeometry(100, 32, 32, 0, Math.PI * 2, Math.PI * 2 / 3, Math.PI / 2);
         var material2 = new THREE.MeshLambertMaterial({color: 0x0000ff, wireframe: true});
         var mesh2 = new THREE.Mesh(geometry2, material2);
         mesh2.position.set(0, 100, 0);
@@ -77,6 +77,7 @@
         var material6 = new THREE.MeshLambertMaterial({map: texture6});
         var mesh6 = new THREE.Mesh(geometry6, material6);
         mesh6.position.set(0, 500, 0);
+        mesh6.scale.set(1.5, 1.5, 1.5);
         scene.add(mesh6);
 
         var texture7 = THREE.ImageUtils.loadTexture('img/chess.png', {}, render);
@@ -86,6 +87,7 @@
         var material7 = new THREE.MeshLambertMaterial({map: texture7});
         var mesh7 = new THREE.Mesh(geometry7, material7);
         mesh7.position.set(200, 500, 0);
+        mesh7.rotation.set(Math.PI / 4, Math.PI / 4, Math.PI / 4);
         scene.add(mesh7);
 
         var materials = [];
@@ -99,9 +101,10 @@
         var material8 = new THREE.MeshFaceMaterial(materials);
         var mesh8 = new THREE.Mesh(geometry8, material8);
         mesh8.position.set(-200, 500, 0);
+        mesh8.rotation.set(Math.PI / 4, Math.PI / 4, Math.PI / 4);
         scene.add(mesh8);
 
-        var light = new THREE.PointLight(0xffffff);
+        var light = new THREE.SpotLight(0xffffff);
         light.position.set(1000, 1000, 1000);
         scene.add(light);
         scene.add(new THREE.AmbientLight(0x666666));
