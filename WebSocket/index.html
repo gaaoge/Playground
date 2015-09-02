@@ -3,23 +3,41 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title></title>
+    <title>扔小球</title>
+    <script src="../WebGL/js/fix-viewport.js"></script>
+    <script src="../WebGL/js/three.js"></script>
+    <script src="../WebGL/js/OrbitControls.js"></script>
+    <script src="../WebGL/js/stats.min.js"></script>
     <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+        }
+
         #btn {
             display: block;
-            font-size: 30px;
-            margin: 100px auto;
+            font-size: .5rem;
+            margin: 1.5rem auto;
         }
 
         #qrcode img {
             margin: 0 auto;
+            width: 4rem;
+            height: 4rem;
+        }
+
+        #canvas {
+            position: absolute;
+            left: 0;
+            top: 0;
         }
     </style>
 </head>
 <body>
 
-<button id="btn">发送</button>
+<button id="btn">扔小球</button>
 <div id="qrcode"></div>
+<canvas id="canvas"></canvas>
 
 <script src="qrcode.js"></script>
 <script>
@@ -31,13 +49,23 @@
         var target = getSearch().target;
         if (!target) {
             target = Date.now();
-            new QRCode('qrcode').makeCode(getAbsPath('') + '?target=' + target);
+            var url = getAbsPath('') + '?target=' + target;
+            new QRCode('qrcode').makeCode(url);
+            document.getElementById('qrcode').addEventListener('click', function () {
+                window.open(url);
+            });
+
             document.getElementById('btn').addEventListener('click', function () {
                 ws.send(JSON.stringify({type: 'msg', message: Math.random(), target: target}));
             });
+
+            document.getElementById('canvas').style.display = 'none';
         } else {
             ws.send(JSON.stringify({type: 'target', target: target}));
-            document.getElementById('btn').innerHTML = '等待接受内容';
+            new QRCode('qrcode').makeCode(getAbsPath('') + '?target=' + target);
+            setTimeout(function () {
+                addQrcode(document.getElementsByTagName('img')[0].src);
+            }, 300);
         }
     };
 
@@ -50,8 +78,9 @@
     };
 
     ws.onmessage = function (e) {
-        var data = JSON.parse(e.data);
-        document.getElementById('btn').innerHTML = data.message;
+        addBall();
+        addBall();
+        addBall();
     };
 
     function getSearch(href) {
@@ -67,6 +96,97 @@
         var a = document.createElement('a');
         a.href = url;
         return a.href;
+    }
+</script>
+
+<script>
+    var scene, camera, renderer, control, stat;
+
+    var balls = [];
+    var a = -0.98;
+
+    init();
+    animate();
+
+    function init() {
+        scene = new THREE.Scene();
+
+        camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 10000);
+        camera.position.set(300, 300, 300);
+        camera.lookAt(scene.position);
+
+        renderer = new THREE.WebGLRenderer({canvas: document.getElementById('canvas')});
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setClearColor(0x000000);
+        document.body.appendChild(renderer.domElement);
+
+        control = new THREE.OrbitControls(camera, renderer.domElement);
+        control.addEventListener('change', function () {
+            renderer.render(scene, camera);
+        });
+    }
+
+    function animate() {
+        requestAnimationFrame(animate);
+        render();
+        control.update();
+    }
+
+    function addQrcode(qrcode) {
+        var texture = THREE.ImageUtils.loadTexture(qrcode, {}, render);
+        var geometry2 = new THREE.PlaneGeometry(200, 200);
+        var material2 = new THREE.MeshLambertMaterial({map: texture, side: THREE.DoubleSide});
+        var plane = new THREE.Mesh(geometry2, material2);
+        plane.rotation.set(-Math.PI / 2, 0, 0);
+        scene.add(plane);
+
+        var light = new THREE.PointLight(0xffffff);
+        light.position.set(1000, 1000, 1000);
+        scene.add(light);
+        scene.add(new THREE.AmbientLight(0x666666));
+    }
+
+    function addBall() {
+        var geometry1 = new THREE.SphereGeometry(10, 64, 64);
+        var material1 = new THREE.MeshLambertMaterial({color: 0xffff00, emissive: 0xff0000});
+        var ball = new THREE.Mesh(geometry1, material1);
+        ball.position.set(0, 200 + 50 * Math.random(), 0);
+        scene.add(ball);
+
+        ball.vy = 0;
+        ball.vx = Math.random() * (Math.random() > .5 ? 1 : -1);
+        ball.vz = Math.random() * (Math.random() > .5 ? 1 : -1);
+        balls.push(ball);
+    }
+
+    //渲染场景
+    function render() {
+        for (var i = 0; i < balls.length; i++) {
+            if (!balls[i].stop) {
+                balls[i].position.y += balls[i].vy;
+                balls[i].vy += a;
+
+                if (balls[i].position.y <= 10) {
+                    balls[i].position.y = 10;
+                    balls[i].vy = -balls[i].vy * 0.8;
+                }
+
+                if (Math.abs(balls[i].position.x) < 100) {
+                    balls[i].position.x += balls[i].vx;
+                } else {
+                    balls[i].stop = true;
+                    scene.remove(balls[i]);
+                }
+
+                if (Math.abs(balls[i].position.z) < 100) {
+                    balls[i].position.z += balls[i].vz;
+                } else {
+                    balls[i].stop = true;
+                    scene.remove(balls[i]);
+                }
+            }
+        }
+        renderer.render(scene, camera);
     }
 </script>
 
