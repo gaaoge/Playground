@@ -15,11 +15,11 @@ wss.on('connection', function (ws) {
         data = JSON.parse(data);
         switch (data.type) {
             case 'target':
-                ws.id = data.target;
+                ws.target = data.target;
                 break;
             case 'msg':
                 for (var i in wss.clients) {
-                    if (wss.clients[i].id == data.target) {
+                    if (wss.clients[i].target == data.target) {
                         wss.clients[i].send(JSON.stringify({message: data.message}));
                     }
                 }

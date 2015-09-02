@@ -48,7 +48,7 @@
     var ball, ballRadius = 10;
     var isMoving = false;
     var v = 0;
-    var a = -0.3;
+    var a = -0.9;
 
     init();
     animate();
@@ -122,8 +122,11 @@
             ball.position.y += v;
             v += a;
 
-            if (ball.position.y <= ballRadius) {
-                v = -v * 0.9;
+            if (ball.position.y <= ballRadius && ball.position.y < 0) {
+                v = -v * 0.75;
+                if(v < 3) {
+                    v = 0;
+                }
             }
         }
 
