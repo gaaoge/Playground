@@ -1,0 +1,28 @@
+/**
+ * Created by GG on 15/9/4.
+ */
+
+body {
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+}
+
+h1 {
+    margin: 1.5rem auto;
+    font-size: .5rem;
+    text-align: center;
+}
+
+#qrcode {
+    -webkit-animation-duration: 600ms;
+    animation-duration: 600ms;
+    -webkit-animation-fill-mode: both;
+    animation-fill-mode: both;
+}
+
+#qrcode img {
+    margin: 0 auto;
+    width: 4rem;
+    height: 4rem;
+}
