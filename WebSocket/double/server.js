@@ -3,6 +3,7 @@
  */
 
 var WebSocketServer = require('ws').Server;
+var uuid = require('uuid');
 
 var wsServer = new WebSocketServer({
     port: 3002
@@ -38,7 +39,7 @@ wsServer.on('connection', function (ws) {
         console.log('close');
     });
 
-    ws.id = Date.now().toString();
+    ws.id = uuid.v4();
     ws.send(JSON.stringify({type: 'register', id: ws.id}));
 });
 

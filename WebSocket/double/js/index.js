@@ -7,7 +7,7 @@
 
     $(function () {
         var $qrcode = $('#qrcode');
-        var ws = new WebSocket("ws://192.168.10.105:3002");
+        var ws = new WebSocket("ws://10.0.1.15:3002");
 
         ws.onopen = function (e) {
             console.log('open');
