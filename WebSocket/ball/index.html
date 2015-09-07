@@ -4,10 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>扔小球</title>
-    <script src="../../WebGL/js/fix-viewport.js"></script>
-    <script src="../../WebGL/js/three.js"></script>
-    <script src="../../WebGL/js/OrbitControls.js"></script>
-    <script src="../../WebGL/js/stats.min.js"></script>
+    <script src="../../WebGL初探/js/fix-viewport.js"></script>
+    <script src="../../WebGL初探/js/three.js"></script>
+    <script src="../../WebGL初探/js/OrbitControls.js"></script>
+    <script src="../../WebGL初探/js/stats.min.js"></script>
     <style>
         body {
             margin: 0;
@@ -42,7 +42,7 @@
 <script src="qrcode.js"></script>
 <script>
     //创建一个WS客户端
-    var ws = new WebSocket("ws://192.168.10.105:3001");
+    var ws = new WebSocket("ws://10.0.1.15:3001");
 
     ws.onopen = function (e) {
         console.log('open');

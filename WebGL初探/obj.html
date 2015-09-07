@@ -11,6 +11,7 @@
     <script src="js/OBJLoader.js"></script>
     <script src="js/MTLLoader.js"></script>
     <script src="js/OBJMTLLoader.js"></script>
+    <script src="js/Tween.js"></script>
     <style>
         body {
             margin: 0;
@@ -37,7 +38,7 @@
 
         renderer = new THREE.WebGLRenderer();
         renderer.setSize(window.innerWidth, window.innerHeight);
-        renderer.setClearColor(0x000000);
+        renderer.setClearColor(0xaaaaaa);
         renderer.shadowMapEnabled = true;
         renderer.shadowMapSoft = true;
         document.body.appendChild(renderer.domElement);
@@ -68,18 +69,12 @@
         var loader1 = new THREE.OBJLoader();
         loader1.load('obj/car/file.obj', function (obj) {
             model = obj;
-            model.castShadow = true;
-            model.position.y = 200;
+            model.children[0].castShadow = true;
+            model.position.y = -20;
             scene.add(model);
 
-            new TWEEN.Tween(model.position).to({x: 200}, 2000).repeat(Infinity).start();
+            new TWEEN.Tween(model.rotation).to({y: Math.PI * 2}, 5000).repeat(Infinity).start();
         });
-
-        var cube = new THREE.Mesh(new THREE.BoxGeometry(100, 100, 100),
-                new THREE.MeshLambertMaterial({color: 0x00ff00}));
-        cube.castShadow = true;
-        cube.position.y = 50;
-        scene.add(cube);
 
 //        var loader2 = new THREE.OBJMTLLoader();
 //        loader2.load('obj/car/file.obj', 'obj/car/file.mtl', function (obj) {

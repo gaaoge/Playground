@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Hello Three.js</title>
+    <script src="../lib/fix-viewport.js"></script>
+    <script src="../lib/three.js"></script>
+    <script src="../lib/OrbitControls.js"></script>
+    <script src="../lib/stats.min.js"></script>
+    <script src="js/BinaryLoader.js"></script>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+        }
+
+        .buttons {
+            position: absolute;
+            left: 0;
+            top: .5rem;
+            width: 100%;
+            text-align: center;
+        }
+
+        .buttons button {
+            border: 0;
+            background: #000;
+            color: #fff;
+            padding: 0.05rem 0.1rem;
+            margin: 0.1rem;
+            cursor: pointer;
+            border-radius: .05rem;
+            font-size: 0.25rem;
+        }
+
+        .loading {
+            position: absolute;
+            left: 0;
+            top: 5rem;
+            width: 100%;
+            text-align: center;
+            font-size: .3rem;
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+
+<div class="buttons">
+    <button data-name="veyron">布加迪</button>
+    <button data-name="gallardo">兰博基尼</button>
+    <button data-name="f50">法拉利</button>
+</div>
+<div class="loading">加载中...</div>
+
+<script>
+    var scene, camera, renderer, control, stat;
+
+    var Cars;
+
+    init();
+    animate();
+    switchCar('veyron');
+
+    function init() {
+        scene = new THREE.Scene();
+
+        camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 100000);
+        camera.position.set(1000, 0, 1000);
+        camera.lookAt(scene.position);
+
+        renderer = new THREE.WebGLRenderer();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setClearColor(0x000000);
+        document.body.appendChild(renderer.domElement);
+
+        control = new THREE.OrbitControls(camera, renderer.domElement);
+        control.addEventListener('change', function () {
+            renderer.render(scene, camera);
+        });
+        control.maxDistance = 2500;
+        control.minDistance = 2500;
+
+        stat = new Stats();
+        stat.domElement.style.position = 'absolute';
+        stat.domElement.style.right = '0px';
+        stat.domElement.style.top = '0px';
+        document.body.appendChild(stat.domElement);
+
+        var buttons = document.querySelectorAll('button');
+        for (var i = 0; i < buttons.length; i++) {
+            buttons[i].addEventListener('click', function () {
+                switchCar(this.dataset.name);
+            });
+        }
+
+        add();
+    }
+
+    function animate() {
+        requestAnimationFrame(animate);
+        render();
+        control.update();
+        stat.update();
+    }
+
+    //添加场景内容
+    function add() {
+        //light
+        var ambient = new THREE.AmbientLight(0x050505);
+        scene.add(ambient);
+
+        var directionalLight1 = new THREE.DirectionalLight(0xffffff, 2);
+        directionalLight1.position.set(2, 1.2, 10).normalize();
+        scene.add(directionalLight1);
+
+        var directionalLight2 = new THREE.DirectionalLight(0xffffff, 1);
+        directionalLight2.position.set(-2, 1.2, -10).normalize();
+        scene.add(directionalLight2);
+
+        var pointLight = new THREE.PointLight(0xffaa00, 2);
+        pointLight.position.set(2000, 1200, 10000);
+        scene.add(pointLight);
+
+        // Skybox
+        var path = "textures/bridge/";
+        var urls = [path + "px.jpg", path + "nx.jpg",
+            path + "py.jpg", path + "ny.jpg",
+            path + "pz.jpg", path + "nz.jpg"];
+
+        var textureCube = THREE.ImageUtils.loadTextureCube(urls);
+        var shader = THREE.ShaderLib["cube"];
+        shader.uniforms["tCube"].value = textureCube;
+
+        var material = new THREE.ShaderMaterial({
+            fragmentShader: shader.fragmentShader,
+            vertexShader: shader.vertexShader,
+            uniforms: shader.uniforms,
+            side: THREE.BackSide
+        });
+        var mesh = new THREE.Mesh(new THREE.BoxGeometry(100000, 100000, 100000), material);
+        scene.add(mesh);
+
+        //common materials
+        var mlib = {
+            "Orange": new THREE.MeshLambertMaterial({
+                color: 0xff6600,
+                envMap: textureCube,
+                combine: THREE.MixOperation,
+                reflectivity: 0.3
+            }),
+            "Blue": new THREE.MeshLambertMaterial({
+                color: 0x001133,
+                envMap: textureCube,
+                combine: THREE.MixOperation,
+                reflectivity: 0.3
+            }),
+            "Red": new THREE.MeshLambertMaterial({
+                color: 0x660000,
+                envMap: textureCube,
+                combine: THREE.MixOperation,
+                reflectivity: 0.25
+            }),
+            "Black": new THREE.MeshLambertMaterial({
+                color: 0x000000,
+                envMap: textureCube,
+                combine: THREE.MixOperation,
+                reflectivity: 0.15
+            }),
+            "White": new THREE.MeshLambertMaterial({
+                color: 0xffffff,
+                envMap: textureCube,
+                combine: THREE.MixOperation,
+                reflectivity: 0.25
+            }),
+
+            "Carmine": new THREE.MeshPhongMaterial({
+                color: 0x770000,
+                specular: 0xffaaaa,
+                envMap: textureCube,
+                combine: THREE.MultiplyOperation
+            }),
+            "Gold": new THREE.MeshPhongMaterial({
+                color: 0xaa9944,
+                specular: 0xbbaa99,
+                shininess: 50,
+                envMap: textureCube,
+                combine: THREE.MultiplyOperation
+            }),
+            "Bronze": new THREE.MeshPhongMaterial({
+                color: 0x150505,
+                specular: 0xee6600,
+                shininess: 10,
+                envMap: textureCube,
+                combine: THREE.MixOperation,
+                reflectivity: 0.25
+            }),
+            "Chrome": new THREE.MeshPhongMaterial({
+                color: 0xffffff,
+                specular: 0xffffff,
+                envMap: textureCube,
+                combine: THREE.MultiplyOperation
+            }),
+
+            "Orange metal": new THREE.MeshLambertMaterial({
+                color: 0xff6600,
+                envMap: textureCube,
+                combine: THREE.MultiplyOperation
+            }),
+            "Blue metal": new THREE.MeshLambertMaterial({
+                color: 0x001133,
+                envMap: textureCube,
+                combine: THREE.MultiplyOperation
+            }),
+            "Red metal": new THREE.MeshLambertMaterial({
+                color: 0x770000,
+                envMap: textureCube,
+                combine: THREE.MultiplyOperation
+            }),
+            "Green metal": new THREE.MeshLambertMaterial({
+                color: 0x007711,
+                envMap: textureCube,
+                combine: THREE.MultiplyOperation
+            }),
+            "Black metal": new THREE.MeshLambertMaterial({
+                color: 0x222222,
+                envMap: textureCube,
+                combine: THREE.MultiplyOperation
+            }),
+
+            "Pure chrome": new THREE.MeshLambertMaterial({color: 0xffffff, envMap: textureCube}),
+            "Dark chrome": new THREE.MeshLambertMaterial({color: 0x444444, envMap: textureCube}),
+            "Darker chrome": new THREE.MeshLambertMaterial({color: 0x222222, envMap: textureCube}),
+
+            "Black glass": new THREE.MeshLambertMaterial({
+                color: 0x101016,
+                envMap: textureCube,
+                opacity: 0.975,
+                transparent: true
+            }),
+            "Dark glass": new THREE.MeshLambertMaterial({
+                color: 0x101046,
+                envMap: textureCube,
+                opacity: 0.25,
+                transparent: true
+            }),
+            "Blue glass": new THREE.MeshLambertMaterial({
+                color: 0x668899,
+                envMap: textureCube,
+                opacity: 0.75,
+                transparent: true
+            }),
+            "Light glass": new THREE.MeshBasicMaterial({
+                color: 0x223344,
+                envMap: textureCube,
+                opacity: 0.25,
+                transparent: true,
+                combine: THREE.MixOperation,
+                reflectivity: 0.25
+            }),
+
+            "Red glass": new THREE.MeshLambertMaterial({color: 0xff0000, opacity: 0.75, transparent: true}),
+            "Yellow glass": new THREE.MeshLambertMaterial({color: 0xffffaa, opacity: 0.75, transparent: true}),
+            "Orange glass": new THREE.MeshLambertMaterial({color: 0x995500, opacity: 0.75, transparent: true}),
+
+            "Orange glass 50": new THREE.MeshLambertMaterial({color: 0xffbb00, opacity: 0.5, transparent: true}),
+            "Red glass 50": new THREE.MeshLambertMaterial({color: 0xff0000, opacity: 0.5, transparent: true}),
+
+            "Fullblack rough": new THREE.MeshLambertMaterial({color: 0x000000}),
+            "Black rough": new THREE.MeshLambertMaterial({color: 0x050505}),
+            "Darkgray rough": new THREE.MeshLambertMaterial({color: 0x090909}),
+            "Red rough": new THREE.MeshLambertMaterial({color: 0x330500}),
+
+            "Darkgray shiny": new THREE.MeshPhongMaterial({color: 0x000000, specular: 0x050505}),
+            "Gray shiny": new THREE.MeshPhongMaterial({color: 0x050505, shininess: 20})
+        };
+        Cars = {
+            "veyron": {
+                url: "obj/veyron/VeyronNoUv_bin.js",
+                scale: 5.5,
+                mmap: {
+                    0: mlib["Black rough"],		// tires + inside
+                    1: mlib["Pure chrome"],		// wheels + extras chrome
+                    2: mlib["Black metal"], 			// back / top / front torso
+                    3: mlib["Dark glass"],		// glass
+                    4: mlib["Pure chrome"],		// sides torso
+                    5: mlib["Pure chrome"],		// engine
+                    6: mlib["Red glass 50"],		// backlights
+                    7: mlib["Orange glass 50"]	// backsignals
+                }
+            },
+            "gallardo": {
+                url: "obj/gallardo/GallardoNoUv_bin.js",
+                scale: 3.7,
+                mmap: {
+                    0: mlib["Pure chrome"], 	// wheels chrome
+                    1: mlib["Black rough"],   // tire
+                    2: mlib["Black glass"], 	// windshield
+                    3: mlib["Chrome"], 		// body
+                    4: mlib["Red glass"],    	// back lights
+                    5: mlib["Yellow glass"],  // front lights
+                    6: mlib["Dark chrome"]	// windshield rim
+                }
+            },
+            "f50": {
+                url:	"obj/f50/F50NoUv_bin.js",
+                scale: 0.175,
+                mmap: {
+                    0:  mlib[ "Dark chrome" ], 		// interior + rim
+                    1:  mlib[ "Pure chrome" ], 		// wheels + gears chrome
+                    2:  mlib[ "Blue glass" ], 		// glass
+                    3: mlib["Red"], 			// torso mid + front spoiler
+                    4:  mlib[ "Darkgray shiny" ], 	// interior + behind seats
+                    5:  mlib[ "Darkgray shiny" ], 	// tiny dots in interior
+                    6: mlib["Red"], 			// back torso
+                    7: mlib["Red"], 			// right mirror decal
+                    8: mlib["Red"], 			// front decal
+                    9: mlib["Red"], 			// front torso
+                    10:mlib["Red"], 			// left mirror decal
+                    11: mlib[ "Pure chrome" ], 		// engine
+                    12: mlib[ "Darkgray rough" ],	// tires side
+                    13: mlib[ "Darkgray rough" ],	// tires bottom
+                    14: mlib[ "Darkgray shiny" ], 	// bottom
+                    15: mlib[ "Black rough" ],		// ???
+                    16: mlib[ "Orange glass" ],		// front signals
+                    17: mlib[ "Dark chrome" ], 		// wheels center
+                    18: mlib[ "Red glass" ], 		// back lights
+                    19: mlib[ "Black rough" ], 		// ???
+                    20: mlib[ "Red rough" ], 		// seats
+                    21: mlib[ "Black rough" ], 		// back plate
+                    22: mlib[ "Black rough" ], 		// front light dots
+                    23:mlib["Red"], 			// back torso
+                    24:mlib["Red"] 			// back torso center
+                }
+            }
+        };
+    }
+
+    //添加车
+    function addCar(name) {
+        document.querySelector('.loading').style.display = 'block';
+        var loader = new THREE.BinaryLoader();
+        loader.load(Cars[name].url, function (geometry) {
+            var material = new THREE.MeshFaceMaterial();
+            for (var i in Cars[name].mmap) {
+                material.materials[i] = Cars[name].mmap[i];
+            }
+
+            var mesh = new THREE.Mesh(geometry, material);
+            mesh.scale.x = mesh.scale.y = mesh.scale.z = Cars[name].scale * 1;
+            scene.add(mesh);
+            Cars[name].mesh = mesh;
+            document.querySelector('.loading').style.display = 'none';
+        });
+    }
+
+    function switchCar(name) {
+        for (var i in Cars) {
+            if (i != name && Cars[i].mesh) {
+                Cars[i].mesh.visible = false;
+            }
+        }
+
+        if (Cars[name].mesh) {
+            Cars[name].mesh.visible = true;
+        } else {
+            addCar(name);
+        }
+    }
+
+    //渲染场景
+    function render() {
+        renderer.render(scene, camera);
+    }
+</script>
+
+</body>
+</html>
