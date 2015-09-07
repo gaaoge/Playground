@@ -2,9 +2,8 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" />
     <title>Hello Three.js</title>
-    <script src="../lib/fix-viewport.js"></script>
     <script src="../lib/three.js"></script>
     <script src="../lib/OrbitControls.js"></script>
     <script src="../lib/stats.min.js"></script>
@@ -31,6 +30,7 @@
         camera.lookAt(scene.position);
 
         renderer = new THREE.WebGLRenderer();
+        renderer.setPixelRatio(window.devicePixelRatio);
         renderer.setSize(window.innerWidth, window.innerHeight);
         renderer.setClearColor(0x000000);
         document.body.appendChild(renderer.domElement);

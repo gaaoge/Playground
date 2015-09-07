@@ -2,9 +2,8 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" />
     <title>跑车</title>
-    <script src="../lib/fix-viewport.js"></script>
     <script src="../lib/three.js"></script>
     <script src="../lib/OrbitControls.js"></script>
     <script src="../lib/stats.min.js"></script>
@@ -18,7 +17,7 @@
         .buttons {
             position: absolute;
             left: 0;
-            top: .5rem;
+            top: 80px;
             width: 100%;
             text-align: center;
         }
@@ -27,20 +26,18 @@
             border: 0;
             background: #000;
             color: #fff;
-            padding: 0.05rem 0.1rem;
-            margin: 0.1rem;
+            padding: 2px 5px;
+            margin: 0 10px;
             cursor: pointer;
-            border-radius: .05rem;
-            font-size: 0.25rem;
+            border-radius: 5px;
         }
 
         .loading {
             position: absolute;
             left: 0;
-            top: 5rem;
+            top: 300px;
             width: 100%;
             text-align: center;
-            font-size: .3rem;
             color: #fff;
         }
     </style>
@@ -71,6 +68,7 @@
         camera.lookAt(scene.position);
 
         renderer = new THREE.WebGLRenderer();
+        renderer.setPixelRatio(window.devicePixelRatio);
         renderer.setSize(window.innerWidth, window.innerHeight);
         renderer.setClearColor(0x000000);
         document.body.appendChild(renderer.domElement);
@@ -79,8 +77,8 @@
         control.addEventListener('change', function () {
             renderer.render(scene, camera);
         });
-        control.maxDistance = 2500;
-        control.minDistance = 2500;
+        control.maxDistance = 2000;
+        control.minDistance = 2000;
 
         stat = new Stats();
         stat.domElement.style.position = 'absolute';

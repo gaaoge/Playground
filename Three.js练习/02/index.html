@@ -2,9 +2,8 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" />
     <title>飞翔的鸟</title>
-    <script src="../lib/fix-viewport.js"></script>
     <script src="../lib/three.js"></script>
     <script src="../lib/OrbitControls.js"></script>
     <script src="../lib/stats.min.js"></script>
@@ -26,8 +25,6 @@
 
         gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );
     }
-
-
 </script>
 <script type="x-shader/x-fragment" id="fragmentShader">
     uniform vec3 topColor;
@@ -41,8 +38,6 @@
         float h = normalize( vWorldPosition + offset ).y;
         gl_FragColor = vec4( mix( bottomColor, topColor, max( pow( max( h , 0.0), exponent ), 0.0 ) ), 1.0 );
     }
-
-
 </script>
 
 <script>
@@ -65,6 +60,7 @@
         camera.lookAt(scene.position);
 
         renderer = new THREE.WebGLRenderer();
+        renderer.setPixelRatio(window.devicePixelRatio);
         renderer.setSize(window.innerWidth, window.innerHeight);
         renderer.setClearColor(scene.fog.color);
         renderer.shadowMapEnabled = true;
