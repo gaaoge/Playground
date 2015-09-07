@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Hello Three.js</title>
+    <title>跑车</title>
     <script src="../lib/fix-viewport.js"></script>
     <script src="../lib/three.js"></script>
     <script src="../lib/OrbitControls.js"></script>
@@ -88,6 +88,12 @@
         stat.domElement.style.top = '0px';
         document.body.appendChild(stat.domElement);
 
+        window.addEventListener('resize', function () {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        }, false);
+
         var buttons = document.querySelectorAll('button');
         for (var i = 0; i < buttons.length; i++) {
             buttons[i].addEventListener('click', function () {
@@ -119,7 +125,7 @@
         directionalLight2.position.set(-2, 1.2, -10).normalize();
         scene.add(directionalLight2);
 
-        var pointLight = new THREE.PointLight(0xffaa00, 2);
+        var pointLight = new THREE.PointLight(0xff8800, 2);
         pointLight.position.set(2000, 1200, 10000);
         scene.add(pointLight);
 
@@ -304,34 +310,34 @@
                 }
             },
             "f50": {
-                url:	"obj/f50/F50NoUv_bin.js",
+                url: "obj/f50/F50NoUv_bin.js",
                 scale: 0.175,
                 mmap: {
-                    0:  mlib[ "Dark chrome" ], 		// interior + rim
-                    1:  mlib[ "Pure chrome" ], 		// wheels + gears chrome
-                    2:  mlib[ "Blue glass" ], 		// glass
+                    0: mlib["Dark chrome"], 		// interior + rim
+                    1: mlib["Pure chrome"], 		// wheels + gears chrome
+                    2: mlib["Blue glass"], 		// glass
                     3: mlib["Red"], 			// torso mid + front spoiler
-                    4:  mlib[ "Darkgray shiny" ], 	// interior + behind seats
-                    5:  mlib[ "Darkgray shiny" ], 	// tiny dots in interior
+                    4: mlib["Darkgray shiny"], 	// interior + behind seats
+                    5: mlib["Darkgray shiny"], 	// tiny dots in interior
                     6: mlib["Red"], 			// back torso
                     7: mlib["Red"], 			// right mirror decal
                     8: mlib["Red"], 			// front decal
                     9: mlib["Red"], 			// front torso
-                    10:mlib["Red"], 			// left mirror decal
-                    11: mlib[ "Pure chrome" ], 		// engine
-                    12: mlib[ "Darkgray rough" ],	// tires side
-                    13: mlib[ "Darkgray rough" ],	// tires bottom
-                    14: mlib[ "Darkgray shiny" ], 	// bottom
-                    15: mlib[ "Black rough" ],		// ???
-                    16: mlib[ "Orange glass" ],		// front signals
-                    17: mlib[ "Dark chrome" ], 		// wheels center
-                    18: mlib[ "Red glass" ], 		// back lights
-                    19: mlib[ "Black rough" ], 		// ???
-                    20: mlib[ "Red rough" ], 		// seats
-                    21: mlib[ "Black rough" ], 		// back plate
-                    22: mlib[ "Black rough" ], 		// front light dots
-                    23:mlib["Red"], 			// back torso
-                    24:mlib["Red"] 			// back torso center
+                    10: mlib["Red"], 			// left mirror decal
+                    11: mlib["Pure chrome"], 		// engine
+                    12: mlib["Darkgray rough"],	// tires side
+                    13: mlib["Darkgray rough"],	// tires bottom
+                    14: mlib["Darkgray shiny"], 	// bottom
+                    15: mlib["Black rough"],		// ???
+                    16: mlib["Orange glass"],		// front signals
+                    17: mlib["Dark chrome"], 		// wheels center
+                    18: mlib["Red glass"], 		// back lights
+                    19: mlib["Black rough"], 		// ???
+                    20: mlib["Red rough"], 		// seats
+                    21: mlib["Black rough"], 		// back plate
+                    22: mlib["Black rough"], 		// front light dots
+                    23: mlib["Red"], 			// back torso
+                    24: mlib["Red"] 			// back torso center
                 }
             }
         };

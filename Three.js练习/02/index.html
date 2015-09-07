@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>飞翔的鸟</title>
+    <script src="../lib/fix-viewport.js"></script>
+    <script src="../lib/three.js"></script>
+    <script src="../lib/OrbitControls.js"></script>
+    <script src="../lib/stats.min.js"></script>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+        }
+    </style>
+</head>
+<body>
+
+<script type="x-shader/x-vertex" id="vertexShader">
+    varying vec3 vWorldPosition;
+
+    void main() {
+        vec4 worldPosition = modelMatrix * vec4( position, 1.0 );
+        vWorldPosition = worldPosition.xyz;
+
+        gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );
+    }
+
+
+</script>
+<script type="x-shader/x-fragment" id="fragmentShader">
+    uniform vec3 topColor;
+    uniform vec3 bottomColor;
+    uniform float offset;
+    uniform float exponent;
+
+    varying vec3 vWorldPosition;
+
+    void main() {
+        float h = normalize( vWorldPosition + offset ).y;
+        gl_FragColor = vec4( mix( bottomColor, topColor, max( pow( max( h , 0.0), exponent ), 0.0 ) ), 1.0 );
+    }
+
+
+</script>
+
+<script>
+    var scene, camera, renderer, control, stat;
+
+    var morphs = [];
+    var clock = new THREE.Clock();
+
+    init();
+    animate();
+
+    function init() {
+        scene = new THREE.Scene();
+
+        scene.fog = new THREE.Fog(0xffffff, 1, 5000);
+        scene.fog.color.setHSL(0.6, 0, 1);
+
+        camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 100000);
+        camera.position.set(300, 100, 300);
+        camera.lookAt(scene.position);
+
+        renderer = new THREE.WebGLRenderer();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setClearColor(scene.fog.color);
+        renderer.shadowMapEnabled = true;
+        renderer.shadowMapCullFace = THREE.CullFaceBack;
+        document.body.appendChild(renderer.domElement);
+
+        control = new THREE.OrbitControls(camera, renderer.domElement);
+        control.addEventListener('change', function () {
+            renderer.render(scene, camera);
+        });
+        control.noZoom = true;
+
+        stat = new Stats();
+        stat.domElement.style.position = 'absolute';
+        stat.domElement.style.right = '0px';
+        stat.domElement.style.top = '0px';
+        document.body.appendChild(stat.domElement);
+
+        window.addEventListener('resize', function () {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        }, false);
+
+        add();
+    }
+
+    function animate() {
+        requestAnimationFrame(animate);
+        render();
+        control.update();
+        stat.update();
+    }
+
+    //添加场景内容
+    function add() {
+        // LIGHTS
+        var hemiLight = new THREE.HemisphereLight(0xffffff, 0xffffff, 0.6);
+        hemiLight.color.setHSL(0.6, 1, 0.6);
+        hemiLight.groundColor.setHSL(0.095, 1, 0.75);
+        hemiLight.position.set(0, 500, 0);
+        scene.add(hemiLight);
+
+        var dirLight = new THREE.DirectionalLight(0xffffff, 1);
+        dirLight.color.setHSL(0.1, 1, 0.95);
+        dirLight.position.set(-1, 1.75, 1);
+        dirLight.position.multiplyScalar(100);
+        dirLight.castShadow = true;
+
+        dirLight.shadowMapWidth = 2048;
+        dirLight.shadowMapHeight = 2048;
+
+        dirLight.shadowCameraLeft = -100;
+        dirLight.shadowCameraRight = 100;
+        dirLight.shadowCameraTop = 100;
+        dirLight.shadowCameraBottom = -100;
+
+        dirLight.shadowCameraFar = 3500;
+        dirLight.shadowBias = -0.0001;
+        dirLight.shadowDarkness = 0.35;
+//        dirLight.shadowCameraVisible = true;
+        scene.add(dirLight);
+
+        // SKY
+        var vertexShader = document.getElementById('vertexShader').textContent;
+        var fragmentShader = document.getElementById('fragmentShader').textContent;
+        var uniforms = {
+            topColor: {type: "c", value: new THREE.Color(0x0077ff)},
+            bottomColor: {type: "c", value: new THREE.Color(0xffffff)},
+            offset: {type: "f", value: 33},
+            exponent: {type: "f", value: 0.6}
+        };
+        uniforms.topColor.value.copy(hemiLight.color);
+        scene.fog.color.copy(uniforms.bottomColor.value);
+
+        var skyGeo = new THREE.SphereGeometry(10000, 32, 15);
+        var skyMat = new THREE.ShaderMaterial({
+            vertexShader: vertexShader,
+            fragmentShader: fragmentShader,
+            uniforms: uniforms,
+            side: THREE.BackSide
+        });
+
+        var sky = new THREE.Mesh(skyGeo, skyMat);
+        scene.add(sky);
+
+        //Ground
+        var groundGeo = new THREE.PlaneBufferGeometry(10000, 10000);
+        var groundMat = new THREE.MeshPhongMaterial({color: 0xffffff, specular: 0x050505});
+        groundMat.color.setHSL(0.095, 1, 0.75);
+
+        var ground = new THREE.Mesh(groundGeo, groundMat);
+        ground.rotation.x = -Math.PI / 2;
+        ground.position.y = -33;
+        ground.receiveShadow = true;
+        scene.add(ground);
+
+        //Model
+        var loader = new THREE.JSONLoader();
+        loader.load("model/flamingo.js", function (geometry) {
+            morphColorsToFaceColors(geometry);
+            geometry.computeMorphNormals();
+
+            var material = new THREE.MeshPhongMaterial({
+                color: 0xffffff,
+                specular: 0xffffff,
+                shininess: 20,
+                morphTargets: true,
+                morphNormals: true,
+                vertexColors: THREE.FaceColors,
+                shading: THREE.FlatShading
+            });
+            var meshAnim = new THREE.MorphAnimMesh(geometry, material);
+
+            meshAnim.duration = 1000;
+            meshAnim.position.y = 50;
+            meshAnim.rotation.y = -1;
+
+            meshAnim.castShadow = true;
+            meshAnim.receiveShadow = true;
+
+            scene.add(meshAnim);
+            morphs.push(meshAnim);
+        });
+    }
+
+    function morphColorsToFaceColors(geometry) {
+        if (geometry.morphColors && geometry.morphColors.length) {
+            var colorMap = geometry.morphColors[0];
+            for (var i = 0; i < colorMap.colors.length; i++) {
+                geometry.faces[i].color = colorMap.colors[i];
+            }
+        }
+    }
+
+    //渲染场景
+    function render() {
+        var delta = clock.getDelta();
+        for (var i = 0; i < morphs.length; i++) {
+            morphs[i].updateAnimation(1000 * delta);
+        }
+        renderer.render(scene, camera);
+    }
+</script>
+
+</body>
+</html>

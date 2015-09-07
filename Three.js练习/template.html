@@ -46,6 +46,12 @@
         stat.domElement.style.top = '0px';
         document.body.appendChild(stat.domElement);
 
+        window.addEventListener('resize', function () {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        }, false);
+
         add();
     }
 
