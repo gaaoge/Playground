@@ -1,0 +1,27 @@
+/**
+ * Created by GG on 15/9/8.
+ */
+
+body {
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+}
+
+.buttons {
+    position: absolute;
+    left: 0;
+    top: 60px;
+    width: 100%;
+    text-align: center;
+}
+
+.buttons button {
+    border: 0;
+    background: #000;
+    color: #fff;
+    padding: 2px 5px;
+    margin: 10px 10px;
+    cursor: pointer;
+    border-radius: 5px;
+}

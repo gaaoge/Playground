@@ -26,22 +26,16 @@
         me.renderer.setPixelRatio(window.devicePixelRatio);
         me.renderer.setSize(window.innerWidth, window.innerHeight);
         me.renderer.setClearColor(0xffffff);
+        document.body.appendChild(me.renderer.domElement);
 
         me.control = new THREE.OrbitControls(me.camera, me.renderer.domElement);
-        me.control.addEventListener('change', function () {
-            me.renderer.render(me.scene, me.camera);
-        });
         me.control.maxDistance = 1000;
 
         me.stat = new Stats();
         me.stat.domElement.style.position = 'absolute';
         me.stat.domElement.style.right = '0px';
         me.stat.domElement.style.top = '0px';
-
-        window.addEventListener('DOMContentLoaded', function () {
-            document.body.appendChild(me.renderer.domElement);
-            document.body.appendChild(me.stat.domElement);
-        });
+        document.body.appendChild(me.stat.domElement);
 
         window.addEventListener('resize', function () {
             me.camera.aspect = window.innerWidth / window.innerHeight;
