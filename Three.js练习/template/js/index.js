@@ -23,7 +23,7 @@
         me.renderer = new THREE.WebGLRenderer();
         me.renderer.setPixelRatio(window.devicePixelRatio);
         me.renderer.setSize(window.innerWidth, window.innerHeight);
-        me.renderer.setClearColor(0x000000);
+        me.renderer.setClearColor(0xaaaaaa);
         document.body.appendChild(me.renderer.domElement);
 
         me.control = new THREE.OrbitControls(me.camera, me.renderer.domElement);
