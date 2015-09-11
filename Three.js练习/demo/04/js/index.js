@@ -78,6 +78,16 @@
             path + "py.jpg", path + "ny.jpg",
             path + "pz.jpg", path + "nz.jpg"];
 
+        //简单方式
+        //var materialArray = [];
+        //for (var i = 0; i < 6; i++)
+        //    materialArray.push(new THREE.MeshBasicMaterial({
+        //        map: THREE.ImageUtils.loadTexture(urls[i]),
+        //        side: THREE.BackSide
+        //    }));
+        //var material = new THREE.MeshFaceMaterial(materialArray);
+
+        //着色器方式
         var textureCube = THREE.ImageUtils.loadTextureCube(urls);
         var shader = THREE.ShaderLib["cube"];
         shader.uniforms["tCube"].value = textureCube;
@@ -89,26 +99,26 @@
             side: THREE.BackSide
         });
 
+        me.sky && me.scene.remove(me.sky);
         me.sky = new THREE.Mesh(new THREE.BoxGeometry(100000, 100000, 100000), material);
         me.sky.name = name;
         me.scene.add(me.sky);
-    };
 
-    //切换天空盒
-    APP.prototype.switchSky = function (name) {
-        var me = this;
+        //创建一个反射球
+        var sphereGeom = new THREE.SphereGeometry(50, 32, 32);
+        var mirrorSphereMaterial = new THREE.MeshBasicMaterial({color: 0xffffff, envMap: textureCube});
 
-        if (me.sky && me.sky.name != name) {
-            me.scene.remove(me.sky);
-            me.createSky(name);
-        }
+        me.mirrorSphere && me.scene.remove(me.mirrorSphere);
+        me.mirrorSphere = new THREE.Mesh(sphereGeom, mirrorSphereMaterial);
+        me.mirrorSphere.position.set(0, -50, -500);
+        me.scene.add(me.mirrorSphere);
     };
 
     var app = new APP();
     var buttons = document.querySelectorAll('button');
     for (var i = 0; i < buttons.length; i++) {
         buttons[i].addEventListener('click', function () {
-            app.switchSky(this.dataset.name);
+            app.createSky(this.dataset.name);
         });
     }
 }());

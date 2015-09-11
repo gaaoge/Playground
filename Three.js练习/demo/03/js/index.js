@@ -7,7 +7,6 @@
 
     var APP = function () {
         this.autoPlay = true;
-        this.globalGroup = new THREE.Group();
 
         this.init();
         this.animate();
@@ -84,13 +83,28 @@
         me.scene.add(spotLight);
 
         //场景内容
+        me.globalGroup = new THREE.Group();
         me.scene.add(me.globalGroup);
+
+        me.addSphere();
+        me.addModel();
+        me.addSprite();
+    };
+
+    //添加球体
+    APP.prototype.addSphere = function () {
+        var me = this;
 
         //创建球体
         var geometry = new THREE.SphereGeometry(1800, 12, 12);
         var material = new THREE.MeshBasicMaterial({color: 0xededed, wireframe: true});
         var sphere = new THREE.Mesh(geometry, material);
         me.globalGroup.add(sphere);
+    };
+
+    //添加模型
+    APP.prototype.addModel = function () {
+        var me = this;
 
         //加载模型
         var models = {
@@ -170,7 +184,7 @@
                 scale: 1
             }
         };
-        var model3dTexture = [new THREE.MeshLambertMaterial({
+        var materials = [new THREE.MeshLambertMaterial({
             color: 0xffffff
         }), new THREE.MeshLambertMaterial({
             color: 10855845,
@@ -182,13 +196,70 @@
         for (var i in models) {
             (function (i) {
                 loader.load('model/' + i + '.json', function (geometry) {
-                    var mesh = THREE.SceneUtils.createMultiMaterialObject(geometry, model3dTexture);
+                    var mesh = THREE.SceneUtils.createMultiMaterialObject(geometry, materials);
                     mesh.position.set(models[i].position.x, models[i].position.y, models[i].position.z);
                     mesh.rotation.set(models[i].rotation.x, models[i].rotation.y, models[i].rotation.z);
                     mesh.scale.set(models[i].scale, models[i].scale, models[i].scale);
                     me.globalGroup.add(mesh);
                 });
             }(i));
+        }
+    };
+
+    //添加图片模型
+    APP.prototype.addSprite = function () {
+        var me = this;
+
+        var sprites = {
+            'shoe-1': {
+                position: {x: 200, y: 200, z: 0},
+                rotation: {x: 0, y: 0, z: Math.PI / 4}
+            },
+            'shoe-2': {
+                position: {x: 200, y: -200, z: 0},
+                rotation: {x: 0, y: 0, z: -Math.PI / 4}
+            },
+            'shoe-3': {
+                position: {x: -200, y: -200, z: 0},
+                rotation: {x: 0, y: 0, z: Math.PI / 4}
+            },
+            'shoe-4': {
+                position: {x: -200, y: 200, z: 0},
+                rotation: {x: 0, y: 0, z: -Math.PI / 4}
+            },
+            'shoe-5': {
+                position: {x: 0, y: 200, z: 200},
+                rotation: {x: Math.PI / 4, y: 0, z: 0}
+            },
+            'shoe-6': {
+                position: {x: 0, y: -200, z: 200},
+                rotation: {x: -Math.PI / 4, y: 0, z: 0}
+            },
+            'shoe-7': {
+                position: {x: 0, y: -200, z: -200},
+                rotation: {x: Math.PI / 4, y: 0, z: 0}
+            },
+            'shoe-8': {
+                position: {x: 0, y: 200, z: -200},
+                rotation: {x: -Math.PI / 4, y: 0, z: 0}
+            }
+        };
+
+        for (var i in sprites) {
+            var geometry = new THREE.OctahedronGeometry(40, 0);
+            var material = new THREE.MeshLambertMaterial({color: 0x000000, wireframe: true});
+            var mesh = new THREE.Mesh(geometry, material);
+            mesh.position.set(sprites[i].position.x, sprites[i].position.y, sprites[i].position.z);
+            mesh.rotation.set(sprites[i].rotation.x, sprites[i].rotation.y, sprites[i].rotation.z);
+            me.globalGroup.add(mesh);
+
+            var texture = THREE.ImageUtils.loadTexture('img/' + i + '.png');
+            texture.minFilter = THREE.NearestFilter;
+            var spriteMaterial = new THREE.SpriteMaterial({map: texture, useScreenCoordinates: false});
+            var sprite = new THREE.Sprite(spriteMaterial);
+            sprite.position.set(sprites[i].position.x, sprites[i].position.y, sprites[i].position.z);
+            sprite.scale.set(36, 36, 1);
+            me.globalGroup.add(sprite);
         }
     };
 
