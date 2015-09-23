@@ -29,7 +29,7 @@
                     var id = getSearch('id');
                     if (!id) {
                         new QRCode('qrcode').makeCode(getAbsPath('') + '?id=' + data.id);
-                    }else {
+                    } else {
                         new QRCode('qrcode').makeCode(getAbsPath('') + '?id=' + id);
                         ws.send(JSON.stringify({type: 'target', target: id}));
                         $qrcode.hide();
@@ -37,17 +37,17 @@
 
                     $qrcode.on('swipeRight', function () {
                         $qrcode.removeClass().addClass('slideOutRight');
-                        ws.send(JSON.stringify({type: 'msg', message:'swipeRight'}));
+                        ws.send(JSON.stringify({type: 'msg', message: 'swipeRight'}));
                     }).on('swipeLeft', function () {
                         $qrcode.removeClass().addClass('slideOutLeft');
-                        ws.send(JSON.stringify({type: 'msg', message:'swipeLeft'}));
+                        ws.send(JSON.stringify({type: 'msg', message: 'swipeLeft'}));
                     });
                     break;
                 case 'msg':
                     $qrcode.show();
-                    if(data.message == 'swipeLeft') {
+                    if (data.message == 'swipeLeft') {
                         $qrcode.removeClass().addClass('slideInRight');
-                    }else if(data.message == 'swipeRight') {
+                    } else if (data.message == 'swipeRight') {
                         $qrcode.removeClass().addClass('slideInLeft');
                     }
                     break;

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <script src="../lib/create.js"></script>
+</head>
+<body>
+
+<canvas id="canvas" width="400" height="400" style="background: gainsboro"></canvas>
+
+<script>
+
+    var stage = new createjs.Stage("canvas");
+    var circle = new createjs.Shape();
+    circle.graphics.beginFill("rgba(73, 207, 239, 1)").drawCircle(0, 0, 50);
+    circle.x = 200;
+    circle.y = 200;
+    stage.addChild(circle);
+
+    createjs.Tween.get(circle, {loop: true})
+            .wait(1000)
+            .to({scaleX:.3, scaleY: .3}, 1000, createjs.Ease.backInOut)
+            .wait(1000)
+            .to({scaleX:1, scaleY: 1}, 1000, createjs.Ease.backInOut);
+
+    createjs.Ticker.framerate = 60;
+    createjs.Ticker.addEventListener('tick', stage);
+
+</script>
+</body>
+</html>
