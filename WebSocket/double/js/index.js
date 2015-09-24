@@ -7,22 +7,9 @@
 
     $(function () {
         var $qrcode = $('#qrcode');
-        var ws = new WebSocket("ws://10.0.1.15:3002");
-
-        ws.onopen = function (e) {
-            console.log('open');
-        };
-
-        ws.onclose = function (e) {
-            console.log('close');
-        };
-
-        ws.onerror = function (e) {
-            console.error('error');
-        };
+        var ws = new WebSocket("ws://10.0.1.15:3003");
 
         ws.onmessage = function (e) {
-            console.log('message', e.data);
             var data = JSON.parse(e.data);
             switch (data.type) {
                 case 'register':
@@ -31,8 +18,9 @@
                         new QRCode('qrcode').makeCode(getAbsPath('') + '?id=' + data.id);
                     } else {
                         new QRCode('qrcode').makeCode(getAbsPath('') + '?id=' + id);
-                        ws.send(JSON.stringify({type: 'target', target: id}));
+                        ws.send(JSON.stringify({type: 'target', id: id}));
                         $qrcode.hide();
+                        ws.send(JSON.stringify({type: 'msg', message: 'showTip'}));
                     }
 
                     $qrcode.on('swipeRight', function () {

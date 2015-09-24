@@ -12,22 +12,24 @@ var wsServer = new WebSocketServer({
 wsServer.on('connection', function (ws) {
     console.log('connection');
 
+    ws.id = uuid.v4();
+    ws.target = [];
+
     ws.on('message', function (data) {
         data = JSON.parse(data);
         switch (data.type) {
             case 'target':
-                ws.target = [data.target];
+                ws.target.push(data.id);
                 for (var i in wsServer.clients) {
-                    if (wsServer.clients[i].id == data.target) {
-                        wsServer.clients[i].target = wsServer.clients[i].target || [];
+                    if (wsServer.clients[i].id == data.id) {
                         wsServer.clients[i].target.push(ws.id);
+                        break;
                     }
-                    console.log('target', wsServer.clients[i].target);
                 }
                 break;
             case 'msg':
                 for (var i in wsServer.clients) {
-                    if (ws.target && ws.target.indexOf(wsServer.clients[i].id) != -1) {
+                    if (ws.target.indexOf(wsServer.clients[i].id) != -1) {
                         wsServer.clients[i].send(JSON.stringify(data));
                     }
                 }
@@ -39,7 +41,6 @@ wsServer.on('connection', function (ws) {
         console.log('close');
     });
 
-    ws.id = uuid.v4();
     ws.send(JSON.stringify({type: 'register', id: ws.id}));
 });
 

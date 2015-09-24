@@ -37,10 +37,10 @@
                                 $video.on('playing', function () {
                                     $tip.hide();
                                 })[0].play();
-                            }, 500);
+                            }, 600);
                         });
                     } else {
-                        ws.send(JSON.stringify({type: 'target', target: id}));
+                        ws.send(JSON.stringify({type: 'target', id: id}));
                         ws.send(JSON.stringify({type: 'msg', message: 'showTip'}));
                         $video.attr('src', 'video/2.mp4');
                         $tip.show();
