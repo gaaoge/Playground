@@ -8,7 +8,7 @@
     $(function () {
         var $tip = $('.tip');
         var $qrcode = $('#qrcode');
-        var ws = new WebSocket("ws://10.0.1.15:3003");
+        var ws = new WebSocket("ws://s.m.163.com:3303");
 
         ws.onmessage = function (e) {
             var data = JSON.parse(e.data);

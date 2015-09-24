@@ -1,0 +1,14 @@
+{
+  "test": {
+    "username": "ynren1",
+    "password": "ynren@163"
+  },
+  "publish_html": {
+    "username": "wangjun2012",
+    "password": "wangjun2012"
+  },
+  "publish_asset": {
+    "username": "gaoge",
+    "password": "abc123!@#"
+  }
+}

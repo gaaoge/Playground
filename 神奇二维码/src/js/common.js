@@ -59,8 +59,8 @@
 
             //初始化分享数据
             NewsAppShare.update({
-                title: '分享标题',
-                desc: '分享描述',
+                title: '神奇的二维码',
+                desc: '会有什么事情发生呢？',
                 img_url: NewsAppShare.getAbsPath('share-icon.png'),
                 link: NewsAppShare.getAbsPath('')
             });
