@@ -1,0 +1,49 @@
+/**
+ * Created by GG on 15/9/24.
+ */
+
+#common-loading {
+    display: none;
+}
+
+.title {
+    position: absolute;
+    left: 0;
+    top: 120px;
+    width: 100%;
+    font-size: 48px;
+    text-align: center;
+    margin: 0;
+}
+
+.tip {
+    position: absolute;
+    left: 0;
+    top: 250px;
+    width: 100%;
+    font-size: 28px;
+    line-height: 36px;
+    text-align: center;
+    color: green;
+}
+
+.qrcode-container {
+    overflow: hidden;
+    position: absolute;
+    left: 0;
+    top: 460px;
+    width: 100%;
+}
+
+#qrcode {
+    -webkit-animation-duration: 600ms;
+    animation-duration: 600ms;
+    -webkit-animation-fill-mode: both;
+    animation-fill-mode: both;
+}
+
+#qrcode img {
+    margin: 0 auto;
+    width: 360px;
+    height: 360px;
+}
