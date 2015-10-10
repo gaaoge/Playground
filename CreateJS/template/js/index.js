@@ -101,5 +101,22 @@
         //        this.y = evt.stageY + this.offset.y;
         //    });
         //}
+
+        //var circle = new createjs.Shape();
+        //circle.graphics.beginFill("rgba(73, 207, 239, 1)").drawCircle(0, 0, 100);
+        //stage.addChild(circle);
+        //createjs.Tween.get(circle, {loop: true})
+        //    .to({x: window.innerWidth / 2, y: window.innerHeight / 2})
+        //    .wait(1000)
+        //    .to({scaleX: .2, scaleY: .2, alpha:.2}, 1000, createjs.Ease.backInOut)
+        //    .wait(1000)
+        //    .to({scaleX: 1, scaleY: 1, alpha: 1}, 1000, createjs.Ease.backInOut);
+
+        var circle = new createjs.Shape(new createjs.Graphics().beginFill("rgba(73, 207, 239, 1)").drawCircle(0, 0, 10));
+        stage.addChild(circle);
+        stage.addChild(new createjs.Shape(new createjs.Graphics()
+            .beginStroke('#000').moveTo(0, 0).curveTo(0, 200, 200, 200).curveTo(200, 0, 0, 0)));
+        createjs.MotionGuidePlugin.install();
+        createjs.Tween.get(circle, {loop: true}).to({guide: {path: [0, 0, 0, 200, 200, 200, 200, 0, 0, 0]}}, 5000);
     }
 }());

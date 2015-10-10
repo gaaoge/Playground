@@ -1,0 +1,6 @@
+{
+  "manifest": [
+    {"id": "main", "src": "img/main.png"},
+    {"id": "bgm", "src": "music/bgm.mp3"}
+  ]
+}
