@@ -22,13 +22,17 @@
     }
 
     function add() {
+        var background = new createjs.Shape();
+        background.graphics.f("#74ffce").dr(0, 0, window.innerWidth, window.innerHeight);
+        stage.addChild(background);
+
         var spriteSheet = new createjs.SpriteSheet({
             images: ['img/walk.svg'],
             frames: {width: 162, height: 230, count: 22, regX: 81, regY: 115},
             animations: {
                 play: [0, 21]
             },
-            framerate: 24
+            framerate: 22
         });
         var sprite = new createjs.Sprite(spriteSheet, "play");
         sprite.set({
@@ -36,7 +40,7 @@
             y: window.innerHeight / 2,
             scaleX: 3,
             scaleY: 3
-        })
+        });
         stage.addChild(sprite);
 
         //var builder = new createjs.SpriteSheetBuilder();
