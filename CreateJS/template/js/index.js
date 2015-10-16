@@ -8,7 +8,10 @@
 
     var stage;
 
-    init();
+    function main() {
+        init();
+        add();
+    }
 
     function init() {
         var canvas = document.getElementById('canvas');
@@ -18,8 +21,6 @@
         createjs.Ticker.timingMode = createjs.Ticker.RAF;
         createjs.Ticker.addEventListener('tick', stage);
         createjs.Touch.enable(stage);
-
-        add();
     }
 
     function add() {
@@ -33,6 +34,8 @@
         //shape.cache(-50 + bounds.x, -50 + bounds.y, 100 + bounds.width, 100 + bounds.height);
         //stage.addChild(shape);
 
+        //-----------------------
+
         //var shape = new createjs.Shape().set({x: 100, y: 100});
         //shape.graphics.beginFill("#ff0000").drawCircle(0, 0, 50);
         //
@@ -41,6 +44,8 @@
         //];
         //shape.cache(-50, -50, 100, 100);
         //stage.addChild(shape);
+
+        //-----------------------
 
         //var mc = new createjs.MovieClip(createjs.MovieClip.INDEPENDENT, 0, true, {start:10});
         //stage.addChild(mc);
@@ -61,6 +66,8 @@
         //
         //mc.gotoAndPlay("start");
 
+        //-----------------------
+
         //var image = new createjs.Bitmap('img/icon.jpg');
         //image.shadow = new createjs.Shadow("#000000", 5, 5, 10);
         //image.addEventListener('pressmove', function (evt) {
@@ -69,11 +76,15 @@
         //});
         //stage.addChild(image);
 
+        //-----------------------
+
         //var text = new createjs.Text("Hello World", "32px Arial", "#ff7700");
         //text.set({x: window.innerWidth / 2, y: window.innerHeight / 2});
         //text.textAlign = 'center';
         //text.lineWidth = 480;
         //stage.addChild(text);
+
+        //-----------------------
 
         //for (var i = 0; i < 8; i++) {
         //    var text = i;
@@ -102,6 +113,8 @@
         //    });
         //}
 
+        //-----------------------
+
         //var circle = new createjs.Shape();
         //circle.graphics.beginFill("rgba(73, 207, 239, 1)").drawCircle(0, 0, 100);
         //stage.addChild(circle);
@@ -112,11 +125,36 @@
         //    .wait(1000)
         //    .to({scaleX: 1, scaleY: 1, alpha: 1}, 1000, createjs.Ease.backInOut);
 
+        //-----------------------
+
         //var circle = new createjs.Shape(new createjs.Graphics().beginFill("rgba(73, 207, 239, 1)").drawCircle(0, 0, 10));
         //stage.addChild(circle);
         //stage.addChild(new createjs.Shape(new createjs.Graphics()
         //    .beginStroke('#000').moveTo(0, 0).curveTo(0, 200, 200, 200).curveTo(200, 0, 0, 0)));
         //createjs.MotionGuidePlugin.install();
         //createjs.Tween.get(circle, {loop: true}).to({guide: {path: [0, 0, 0, 200, 200, 200, 200, 0, 0, 0]}}, 5000);
+
+        //-----------------------
+
+        //var h1 = document.createElement('h1');
+        //h1.style.fontSize = '60px';
+        //h1.innerHTML = 'Hello World!';
+        //document.body.insertBefore(h1, document.getElementById('canvas'));
+        //var title = new createjs.DOMElement(h1);
+        //var title = new createjs.Text('Hello World!', '60px Arial');
+        //title.set({x: window.innerWidth / 2, y: window.innerHeight / 2, regX: 187.5, regY: 15.5});
+        //stage.addChild(title);
+        //createjs.Ticker.addEventListener('tick', function (e) {
+        //    title.rotation += e.delta * 0.01;
+        //});
+
+        //-----------------------
+
+        //var shape = new createjs.Shape();
+        //shape.x = shape.y = 300;
+        //shape.graphics.beginStroke("#000").beginFill('#000').drawPolyStar(0, 0, 200, 5, 0.6);
+        //stage.addChild(shape);
     }
+
+    main();
 }());

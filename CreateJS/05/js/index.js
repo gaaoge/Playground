@@ -43,6 +43,9 @@
 
         stage.addChild(blur, bitmap);
         updateCacheImage();
+
+        //createjs.Tween.get(blur, {loop:true}).wait(1500).to({alpha:0}, 3000).to({alpha:1}, 3000);
+        //stage.addChild(bitmap, blur);
     }
 
     function handleMouseDown(event) {
