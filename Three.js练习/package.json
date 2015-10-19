@@ -1,8 +1,0 @@
-{
-  "name": "three.js",
-  "version": "1.0.0",
-  "devDependencies": {
-    "grunt": "^0.4.5",
-    "grunt-ftps-deploy": "^0.1.10"
-  }
-}
