@@ -15,8 +15,8 @@
 
     function init() {
         var canvas = document.getElementById('canvas');
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
+        canvas.width = document.documentElement.clientWidth;
+        canvas.height = document.documentElement.clientHeight;
         stage = new createjs.Stage(canvas);
         createjs.Ticker.timingMode = createjs.Ticker.RAF;
         createjs.Ticker.addEventListener('tick', stage);

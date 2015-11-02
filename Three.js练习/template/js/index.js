@@ -6,7 +6,7 @@
     "use strict";
 
     //通用变量
-    var canvas, scene, camera, renderer, control, stat;
+    var width, height, canvas, scene, camera, renderer, control, stat;
 
     //主函数
     function main() {
@@ -21,17 +21,20 @@
 
     //初始化
     function init() {
+        width = document.documentElement.clientWidth;
+        height = document.documentElement.clientHeight;
+
         canvas = document.getElementById('canvas');
 
         scene = new THREE.Scene();
 
-        camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 100000);
+        camera = new THREE.PerspectiveCamera(45, width / height, 1, 100000);
         camera.position.set(1000, 1000, 1000);
         camera.lookAt(scene.position);
 
         renderer = new THREE.WebGLRenderer({canvas: canvas});
         renderer.setPixelRatio(window.devicePixelRatio);
-        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setSize(width, height);
         renderer.setClearColor(0xaaaaaa);
 
         control = new THREE.OrbitControls(camera, canvas);
@@ -43,9 +46,9 @@
         document.body.insertBefore(stat.domElement, canvas);
 
         window.addEventListener('resize', function () {
-            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.aspect = width / height;
             camera.updateProjectionMatrix();
-            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setSize(width, height);
         }, false);
     }
 
@@ -69,6 +72,9 @@
         var grid = new THREE.GridHelper(500, 25);
         grid.setColors(0x444444, 0x888888);
         scene.add(grid);
+
+        var axisHelper = new THREE.AxisHelper(500);
+        scene.add(axisHelper);
     }
 
     main();
