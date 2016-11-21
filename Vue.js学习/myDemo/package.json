@@ -1,0 +1,21 @@
+{
+  "name": "vue-learning",
+  "version": "1.0.0",
+  "description": "",
+  "author": "GG",
+  "license": "ISC",
+  "scripts": {
+    "start": "webpack-dev-server --progress"
+  },
+  "dependencies": {
+    "vue": "^2.0.1"
+  },
+  "devDependencies": {
+    "babel-core": "^6.17.0",
+    "babel-loader": "^6.2.5",
+    "babel-preset-es2015": "^6.16.0",
+    "html-webpack-plugin": "^2.22.0",
+    "webpack": "^1.13.2",
+    "webpack-dev-server": "^1.16.2"
+  }
+}
