@@ -1,0 +1,88 @@
+
+.app-home {
+    text-align: center;
+    font-size: 1rem;
+    line-height: 2rem;
+}
+
+html, body {
+    height: 100%;
+    overflow: hidden;
+    background: #fff;
+}
+body {
+    font: 0.28rem/1.2 sans-serif;
+    -webkit-tap-highlight-color: transparent;
+    -webkit-overflow-scrolling: touch;
+    -webkit-user-select: none;
+}
+.main {
+    position: relative;
+    width: 7.5rem;
+    height: 100%;
+    margin: 0 auto;
+    overflow: hidden
+}
+.main:before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+}
+
+.common-share {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background: rgba(0, 0, 0, 0.75);
+    z-index: 10000
+}
+.common-share .notice {
+    position: absolute;
+    right: 0.5rem;
+    top: 0.5rem;
+    width: 3.8rem;
+    height: 1.4rem;
+    background: url(resource/assets/sprite.share.png?d5d86e3b0561da3bfdb74c56155b6268) 0% 0%  no-repeat;
+    background-size: 100% 100%;
+}
+.common-share-enter-active, .common-share-leave-active {
+    -webkit-transition: opacity .3s;
+    transition: opacity .3s;
+}
+.common-share-enter, .common-share-leave-active {
+    opacity: 0;
+}
+
+.common-toast {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 1rem;
+    text-align: center;
+    -webkit-transform: translate3d(0, 0, 0);
+            transform: translate3d(0, 0, 0);
+    z-index: 10000
+}
+.common-toast span {
+    display: inline-block;
+    max-width: 6rem;
+    padding: 0.1rem 0.2rem;
+    border-radius: 0.08rem;
+    color: #fff;
+    background: rgba(0, 0, 0, 0.8);
+}
+.common-toast-enter-active, .common-toast-leave-active {
+    -webkit-transition-duration: .3s;
+            transition-duration: .3s;
+}
+.common-toast-enter {
+    opacity: 0;
+    -webkit-transform: translate3d(0, 100%, 0);
+            transform: translate3d(0, 100%, 0);
+}
+.common-toast-leave-active {
+    opacity: 0;
+}
