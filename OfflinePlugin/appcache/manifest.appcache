@@ -1,0 +1,14 @@
+CACHE MANIFEST
+#ver:2017-8-17 11:17:58
+#plugin:4.8.3
+
+CACHE:
+../resource/assets/sprite.share.png?d5d86e3b0561da3bfdb74c56155b6268
+../bundle.72e1f6f01a6c31a6869d.js
+../libs/bundle.1c20754ce8ced8dae373.js
+../bundle.18df8dc4b59c7afc72451654ff014690.css
+../
+../resource/statics/share-icon.png
+
+NETWORK:
+*
